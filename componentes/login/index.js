@@ -37,7 +37,6 @@ export default function Login() {
                 login: email,
                 senha
             });
-            alert('Sucesso!')
 
         } catch (error) {
             alert(
