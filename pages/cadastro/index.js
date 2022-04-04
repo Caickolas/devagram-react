@@ -13,7 +13,7 @@ import imagemChave from "../../public/imagens/chave.svg";
 import imagemUsuarioAtivo from "../../public/imagens/usuarioAtivo.svg";
 import imagemAvatar from "../../public/imagens/avatar.svg";
 
-const usuarioService = new UsuarioService()
+const usuarioService = new UsuarioService();
 
   export default function Cadastro() {
 
@@ -21,7 +21,7 @@ const usuarioService = new UsuarioService()
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-    const [confirmacaoSenha, setConfirmacaoSenha] = useState("");
+    const [confirmacaoSenha, setConfirmacaoSenha] = useState(""); 
     const [estaSubmetendo, setEstaSubmetendo] = useState(false);
 
     const aoSubmeter= async (e) => {
@@ -47,7 +47,7 @@ const usuarioService = new UsuarioService()
         }catch(error){
             alert(
                 "erro ao cadastrar usuario." + error?.response?.data?.erro
-            )
+            );
         }
 
         setEstaSubmetendo(false);
