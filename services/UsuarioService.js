@@ -17,4 +17,12 @@ export default class UsuarioService extends HttpService {
     async cadastro(dados) {
         return this.post('/cadastro', dados);
     }
+
+    obterInformacoesDoUsuarioLogado() {
+        return {
+            id: localStorage.getItem('id'),
+            nome: localStorage.getItem('nome'),
+            role: localStorage.getItem('role')
+        }
+    }
 }
