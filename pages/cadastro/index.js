@@ -3,36 +3,46 @@ import Image from "next/image";
 import Link from "next/link";
 import Botao from "../../componentes/botao";
 import InputPublico from "../../componentes/inputPublico";
-import UploadImagem from "../../componentes/uploadImagem/";
-import { validarEmail, validarSenha, validarNome, validarConfirmacaoSenha } from '../../utils/validadores'
+import UploadImagem from "../../componentes/uploadImagem";
+import { validarEmail, validarSenha, validarNome, validarConfirmacaoSenha } from "../../utils/validadores";
 import UsuarioService from "../../services/UsuarioService";
 
 import imagemLogo from "../../public/imagens/logo.svg";
+import imagemUsuarioAtivo from "../../public/imagens/usuarioAtivo.svg";
 import imagemEnvelope from "../../public/imagens/envelope.svg";
 import imagemChave from "../../public/imagens/chave.svg";
-import imagemUsuarioAtivo from "../../public/imagens/usuarioAtivo.svg";
 import imagemAvatar from "../../public/imagens/avatar.svg";
+import { useRouter } from "next/router";
 
 const usuarioService = new UsuarioService();
 
-  export default function Cadastro() {
-
+export default function Cadastro() {
     const [imagem, setImagem] = useState(null);
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-    const [confirmacaoSenha, setConfirmacaoSenha] = useState(""); 
+    const [confirmacaoSenha, setConfirmacaoSenha] = useState("");
     const [estaSubmetendo, setEstaSubmetendo] = useState(false);
+    const router = useRouter();
 
-    const aoSubmeter= async (e) => {
+    const validarFormulario = () => {
+        return (
+            validarNome(nome)
+            && validarEmail(email)
+            && validarSenha(senha)
+            && validarConfirmacaoSenha(senha, confirmacaoSenha)
+        );
+    }
+
+    const aoSubmeter = async (e) => {
         e.preventDefault();
-        if(!validarFormulario()) {
+        if (!validarFormulario()) {
             return;
         }
 
         setEstaSubmetendo(true);
 
-        try{
+        try {
             const corpoReqCadastro = new FormData();
             corpoReqCadastro.append("nome", nome);
             corpoReqCadastro.append("email", email);
@@ -43,24 +53,23 @@ const usuarioService = new UsuarioService();
             }
 
             await usuarioService.cadastro(corpoReqCadastro);
-            alert ('Sucesso!')
-        }catch(error){
+            await usuarioService.login({
+                login: email,
+                senha
+            });
+            
+            router.push('/');
+        } catch (error) {
             alert(
-                "erro ao cadastrar usuario." + error?.response?.data?.erro
+                "Erro ao cadastrar usuario. " + error?.response?.data?.erro
             );
         }
 
         setEstaSubmetendo(false);
     }
 
-      const validarFormulario = () => {
-          return (
-              validarEmail(email) && validarSenha(senha) && validarNome(nome) && validarConfirmacaoSenha(senha, confirmacaoSenha)
-          );
-      };
-
     return (
-        <section className={'paginaCadastro paginaPublica'}>
+        <section className={`paginaCadastro paginaPublica`}>
             <div className="logoContainer desktop">
                 <Image
                     src={imagemLogo}
@@ -72,53 +81,51 @@ const usuarioService = new UsuarioService();
 
             <div className="conteudoPaginaPublica">
                 <form onSubmit={aoSubmeter}>
-                    <UploadImagem 
+                    <UploadImagem
                         imagemPreviewClassName="avatar avatarPreview"
-                        imagemPreview={imagem?.preview || imagemAvatar.src }
+                        imagemPreview={imagem?.preview || imagemAvatar.src}
                         setImagem={setImagem}
                     />
 
-
                     <InputPublico
                         imagem={imagemUsuarioAtivo}
-                        texto={"Nome Completo"}
+                        texto="Nome Completo"
                         tipo="text"
                         aoAlterarValor={e => setNome(e.target.value)}
                         valor={nome}
-                        mensagemValidacao="Precisa ter ao menos 3 caracteres"
+                        mensagemValidacao="O nome precisa de pelo menos 2 caracteres"
                         exibirMensagemValidacao={nome && !validarNome(nome)}
                     />
 
                     <InputPublico
                         imagem={imagemEnvelope}
-                        texto={"E-mail"}
+                        texto="E-mail"
                         tipo="email"
                         aoAlterarValor={e => setEmail(e.target.value)}
                         valor={email}
-                        mensagemValidacao="O endereço informado é invalido"
+                        mensagemValidacao="O e-mail informado é inválido"
                         exibirMensagemValidacao={email && !validarEmail(email)}
                     />
 
                     <InputPublico
                         imagem={imagemChave}
-                        texto={"Senha"}
+                        texto="Senha"
                         tipo="password"
                         aoAlterarValor={e => setSenha(e.target.value)}
                         valor={senha}
-                        mensagemValidacao="Precisa ter ao menos 4 caracteres"
+                        mensagemValidacao="Precisa de pelo menos 3 caracteres"
                         exibirMensagemValidacao={senha && !validarSenha(senha)}
                     />
-                    
+
                     <InputPublico
                         imagem={imagemChave}
-                        texto={"Confirmar Senha"}
+                        texto="Confirmar Senha"
                         tipo="password"
                         aoAlterarValor={e => setConfirmacaoSenha(e.target.value)}
                         valor={confirmacaoSenha}
-                        mensagemValidacao="Precisa ser identica a senha"
+                        mensagemValidacao="As senhas precisam ser iguais"
                         exibirMensagemValidacao={confirmacaoSenha && !validarConfirmacaoSenha(senha, confirmacaoSenha)}
                     />
-
 
                     <Botao
                         texto="Cadastrar"
@@ -127,13 +134,11 @@ const usuarioService = new UsuarioService();
                     />
                 </form>
 
-
                 <div className="rodapePaginaPublica">
-                    <p>já possui uma Conta?</p>
-                    <Link href="/"> Faça seu login agora!</Link>
+                    <p>Já possui uma conta?</p>
+                    <Link href="/">Faça seu login agora!</Link>
                 </div>
             </div>
-
         </section>
     );
-};
+}
