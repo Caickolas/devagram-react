@@ -69,6 +69,23 @@ input {
   margin-bottom: 5px;
 }
 
+.barraNavegacao {
+  ul{
+    display: flex;
+    justify-content: space-around;
+    padding: 0px;
+    margin: 10px 0px;
+
+    li{
+      list-style: none;
+      cursor: pointer;
+    }
+  }
+}
+
+strong {
+  font-family: $fontBold;
+}
 
 
 @import '../public/fonts/fonts.scss';
@@ -76,3 +93,5 @@ input {
 @import '../styles/paginaPublica.scss';
 @import '../componentes/inputPublico/inputPublico.scss';
 @import '../pages/cadastro/cadastro.scss';
+@import '../componentes/layout/header.scss';
+@import '../componentes/layout/footer.scss';
