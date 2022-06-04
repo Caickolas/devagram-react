@@ -40,12 +40,17 @@ export default function Header() {
         router.push(`/perfil/${id}`);
     }
 
+    const redirecionarParaHome = () => {
+        router.push('/');
+    }
+
 
     return(
         <header className='headerPrincipal'>
             <div className='conteudoHeaderPrincipal'>
                 <div className='logoHeaderPrincipal'>
                     <Image
+                        onClick={redirecionarParaHome}
                         src={logoHorizontalImg}
                         alt='Logo Devagram'
                         layout='fill'
