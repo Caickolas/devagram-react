@@ -4,31 +4,40 @@ import logoHorizontalImg from '../../public/imagens/logoHorizontal.svg';
 import lupaImg from '../../public/imagens/lupa.svg';
 import Navegacao from './Navegacao';
 import ResultadoPesquisa from './ResultadoPesquisa';
+import UsuarioService from '../../services/UsuarioService'
+import { useRouter } from 'next/router';
+
+const usuarioService = new UsuarioService();
 
 export default function Header() {
     const [resultadoPesquisa, setResultadoPesquisa] = useState([]);
     const [termoPesquisado, setTermoPesquisado] = useState([])
+    const router = useRouter();
     
-    const aoPesquisar = (e) => {
+    const aoPesquisar = async (e) => {
         setTermoPesquisado(e.target.value);
         setResultadoPesquisa([]);
+        
 
         if(termoPesquisado.length < 3){
             return;
         }
+
+        try {
+            const { data } = await usuarioService.pesquisar(termoPesquisado);
+            setResultadoPesquisa(data)
+
+        } catch (error) {
+            alert('Erro ao pesquisar usuario. ' + error?.response?.data?.erro);
+        }
     
-        setResultadoPesquisa([
-            {
-                avatar: '',
-                nome: 'Caick',
-                email: 'Caicksim',
-                _id: '434343'
-            }
-        ])
-    }
+       
     
+    }   
     const aoClicarResultadoPesquisa = (id) => {
-        console.log('aoClicarResultadoPesquisa', {id})
+        setResultadoPesquisa([]);
+        setTermoPesquisado('');
+        router.push(`/perfil/${id}`);
     }
 
 
