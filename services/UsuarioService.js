@@ -28,4 +28,13 @@ export default class UsuarioService extends HttpService {
         return this.get('/pesquisa?filtro=' + termodaPesquisa);
     }
 
+    obterInformacoesDoUsuarioLogado() {
+        return {
+            id: localStorage.getItem('id'),
+            nome: localStorage.getItem('nome'),
+            email: localStorage.getItem('email'),
+            avatar: localStorage.getItem('avatar')
+        }
+    }
+
 }
