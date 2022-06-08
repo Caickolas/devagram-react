@@ -8,6 +8,11 @@ export function FazerComentario ({usuarioLogado}) {
             rows={1}
             placeholder="Adicione um comentario"></textarea>
 
+            <button 
+            className="btnPublicacao desktop"
+            type="button"
+             > Publicar </button>
+
         </div>
     )
 }
